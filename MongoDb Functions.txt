@@ -1,0 +1,77 @@
+> db
+test
+> use sample
+switched to db sample
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db
+sample
+> db.createCollection('user')
+{ "ok" : 1 }
+> db.user.insert({name: "Taslim" , place:"calicut"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find()
+{ "_id" : ObjectId("61efc98582c63e58f9b2fca0"), "name" : "Taslim", "place" : "calicut" }
+> db.user.find().pretty()
+{
+        "_id" : ObjectId("61efc98582c63e58f9b2fca0"),
+        "name" : "Taslim",
+        "place" : "calicut"
+}
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+sample  0.000GB
+> db.user.insert({name:"Name", place:"palakkad"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find().pretty()
+{
+        "_id" : ObjectId("61efc98582c63e58f9b2fca0"),
+        "name" : "Taslim",
+        "place" : "calicut"
+}
+{
+        "_id" : ObjectId("61efcdf182c63e58f9b2fca1"),
+        "name" : "Name",
+        "place" : "palakkad"
+}
+> db.user.find(place:"calicut").pretty()
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:18
+> db.user.find({place: "calicut"}).pretty()
+{
+        "_id" : ObjectId("61efc98582c63e58f9b2fca0"),
+        "name" : "Taslim",
+        "place" : "calicut"
+}
+> db.user.find({name:1,_id:0}).pretty()
+> db.user.find(,{name:1,_id:0}).pretty()
+uncaught exception: SyntaxError: expected expression, got ',' :
+@(shell):1:13
+> db.user.find({place:"calicut"},{name:1,_id:0}).pretty()
+{ "name" : "Taslim" }
+> db.user.update({name:"Taslim"},{$set:{name:"Moosa"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+>
+> db.user.find().pretty()
+{
+        "_id" : ObjectId("61efc98582c63e58f9b2fca0"),
+        "name" : "Moosa",
+        "place" : "calicut"
+}
+{
+        "_id" : ObjectId("61efcdf182c63e58f9b2fca1"),
+        "name" : "Name",
+        "place" : "palakkad"
+}
+> db.user.remove({name:"Name"})
+WriteResult({ "nRemoved" : 1 })
+> db.user.find().pretty()
+{
+        "_id" : ObjectId("61efc98582c63e58f9b2fca0"),
+        "name" : "Moosa",
+        "place" : "calicut"
+}
